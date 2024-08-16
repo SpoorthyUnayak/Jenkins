@@ -12,7 +12,7 @@ pipeline {
         }
       steps {
        // sh 'echo passed'
-       echo "branch is ${BRANCH_NAME}"
+        echo "branch is ${BRANCH_NAME}"
         git branch: "${BRANCH_NAME}", url: "https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}"
       }
     }
