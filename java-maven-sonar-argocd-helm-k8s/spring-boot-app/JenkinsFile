@@ -43,9 +43,9 @@ pipeline {
                     BUILD_NUMBER=${BUILD_NUMBER}
                     cd gitOpsProject
                     sed -i "s/tagname/${BUILD_NUMBER}/g" kubernetesProject/deployment.yml
-                    git add kubernetesProject/deployment.yml
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                  //  git add kubernetesProject/deployment.yml
+                 //   git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                 //   git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
                 '''
             }
         }
