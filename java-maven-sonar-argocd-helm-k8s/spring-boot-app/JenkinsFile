@@ -1,10 +1,18 @@
 pipeline {
   agent any
+  parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'feature/U2C-11111', description: 'Branch to deploy from')
+        choice(name: 'DEPLOY_ENV', choices: ['dev', 'preProd', 'production'], description: 'Environment to deploy to')
+    }
   stages {
     stage('Checkout') {
+    environment {
+            GIT_REPO_NAME = "Jenkins"
+            GIT_USER_NAME = "SpoorthyUnayak"
+        }
       steps {
-        sh 'echo passed'
-        //git branch: 'main', url: 'https://github.com/SpoorthyUnayak/Jenkins.git'
+       // sh 'echo passed'
+        git branch: "${BRANCH_NAME}", url: "https://github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git"
       }
     }
     stage('Build and Test') {
@@ -36,16 +44,23 @@ pipeline {
             GIT_USER_NAME = "SpoorthyUnayak"
         }
         steps {
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {              
                 sh '''
                     git config user.email "spoorthyunayak@gmail.com"
                     git config user.name "SpoorthyUnayak"
-                    BUILD_NUMBER=${BUILD_NUMBER}
+                    BUILD_NUMBER=${BUILD_NUMBER}             
                     cd gitOpsProject
                     sed -i "s/tagname/${BUILD_NUMBER}/g" kubernetesProject/deployment.yml
                     git add kubernetesProject/deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    if (params.DEPLOY_ENV == 'dev') {
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:ReleaseBranchDev
+                        } else if (params.DEPLOY_ENV == 'preProd') {
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:ReleaseBranchPP
+                        } else if (params.DEPLOY_ENV == 'production') {
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                        }
+                    fi
                 '''
             }
         }
