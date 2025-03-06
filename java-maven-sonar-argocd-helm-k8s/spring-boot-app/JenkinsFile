@@ -45,7 +45,6 @@ pipeline {
                     BUILD_NUMBER=${BUILD_NUMBER}            
                                        
                     if [ "${DEPLOY_ENV}" = "dev" ]; then
-                            git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}
                             cd gitOpsProject
                             echo "dev branch is ReleaseBranchDev in GitOps" 
                             git checkout ReleaseBranchDev
