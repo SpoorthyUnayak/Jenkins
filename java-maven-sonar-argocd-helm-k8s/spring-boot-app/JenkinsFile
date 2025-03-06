@@ -51,7 +51,7 @@ pipeline {
                             git checkout ReleaseBranchDev
                             ls kubernetesProject/
                             echo "success2"
-                            sed -i "s/spoorthynayak/docker_image:*/spoorthynayak/docker_image:${BUILD_NUMBER}/g" kubernetesProject/deployment.yml
+                            sed -i "s/docker_image*/docker_image:${BUILD_NUMBER}/g" kubernetesProject/deployment.yml
                             echo "success3"
                             cat kubernetesProject/deployment.yml                            
                             git add kubernetesProject/deployment.yml
